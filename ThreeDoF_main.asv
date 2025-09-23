@@ -17,33 +17,22 @@ area = 2 * pi * (outerDiameter / 2) ^ 2; % Area of the rocket, m^2
 launchAngle = (85 / 180) * pi; % Launch angle in radians from ground up, rads
 x0 = 0; % Initial Launch Height, m
 densityAir = 1; % Air density (constant), 
-tspan = [0 5];
 
 parameters = [thrust, mass, area, dragCoefficient, g, densityAir]; % Parameters needed for velocity calculations
 
 %% Calculations
 
-[t, x] = ode45(@(t,x)velocity(t, x, parameters, launchAngle, burnTime), tspan, x0);
+xDot = ode45(@(t,x)velocity(t, x, parameters, theta) );
 
 
-function dx = velocity(t, x, parameters, theta, burnTime)
+function dx = velocity(t, x, parameters, theta)
 
 % Acceleration = (force of thrust - force of gravity - force of drag) / mass
-
-if t < burnTime
 dx = [
     1;
     1;
     (parameters(1) * sin(theta) - parameters(5) * parameters(2) - (parameters(4) * parameters(3) * parameters(6)) * x(3)^2 / 2) / parameters(2)
     ];
-else
-
-    dx = [
-    1;
-    1;
-    (- parameters(5) * parameters(2) - (parameters(4) * parameters(3) * parameters(6)) * x(3)^2 / 2) / parameters(2)
-    ];
-end
 
 end
 
